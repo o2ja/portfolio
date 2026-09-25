@@ -17,3 +17,6 @@ graphify-out/
 # project exports: only homepage/ is needed by the preview builds
 PORTFOLIO_EXPORT_*/*
 !PORTFOLIO_EXPORT_*/homepage/
+
+# private
+Omar_Ajarmeh_CV.pdf
