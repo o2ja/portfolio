@@ -1,0 +1,154 @@
+@import "tailwindcss";
+
+@theme {
+  /* Palette: white paper, lavender haze, iris accent, butter highlight, violet-cast ink */
+  --color-paper: #ffffff;
+  --color-haze: #f5f2fa;
+  --color-haze-deep: #ebe5f5;
+  --color-sand: #efe8dd;
+  --color-butter: #f4e5a6;
+  --color-butter-soft: #fbf5dc;
+  --color-iris: #6b4fa0;
+  --color-iris-deep: #4e3878;
+  --color-iris-soft: #c9bce4;
+  --color-ink: #241f2e;
+  --color-ink-soft: #5b5368;
+  --color-ink-faint: #8b8496;
+  --color-line: #e4dfec;
+
+  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
+
+  --radius-xs: 3px;
+  --radius-sm: 5px;
+  --radius-md: 8px;
+
+  --ease-out-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    font-feature-settings: "ss01";
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-fraunces), Georgia, "Times New Roman", serif;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    text-wrap: balance;
+  }
+
+  ::selection {
+    background: var(--color-butter);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-iris);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  input,
+  select,
+  textarea,
+  button {
+    font: inherit;
+    color: inherit;
+  }
+}
+
+@layer components {
+  /* Page shell: one gutter rule for every section on the site */
+  .shell {
+    width: 100%;
+    max-width: 78rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+
+  @media (min-width: 768px) {
+    .shell {
+      padding-inline: 2.5rem;
+    }
+  }
+
+  /* Editorial section head: a hairline iris rule, then the label, in the left column */
+  .rule-label {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    font-size: 0.8125rem;
+    letter-spacing: 0.04em;
+    color: var(--color-ink-faint);
+  }
+
+  .rule-label::before {
+    content: "";
+    width: 1.75rem;
+    height: 1px;
+    background: var(--color-iris-soft);
+    translate: 0 -0.3em;
+    flex: none;
+  }
+
+  .prose-body p {
+    margin-block: 0 1.15em;
+    max-width: 68ch;
+  }
+
+  .prose-body p:last-child {
+    margin-bottom: 0;
+  }
+}
+
+/* One orchestrated reveal per section, and nothing at all when motion is reduced.
+   Scoped to [data-motion="on"], which MotionRoot sets, so content is never
+   hidden when JavaScript has not run. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-motion="on"] .reveal {
+    opacity: 0;
+    translate: 0 14px;
+    transition:
+      opacity 0.7s var(--ease-out-soft),
+      translate 0.7s var(--ease-out-soft);
+  }
+
+  [data-motion="on"] .reveal[data-shown="true"] {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  .draw-path {
+    stroke-dasharray: var(--len, 1);
+    stroke-dashoffset: var(--len, 1);
+    animation: draw 2.6s var(--ease-out-soft) 0.15s forwards;
+  }
+
+  @keyframes draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

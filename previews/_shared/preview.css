@@ -1,0 +1,9 @@
+/* Loaded into every preview document, after the project's own styles. */
+html {
+  /* the preview scrolls itself; it never hands leftover scroll to the portfolio page */
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+html::-webkit-scrollbar {
+  display: none;
+}

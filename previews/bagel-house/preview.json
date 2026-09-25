@@ -1,0 +1,8 @@
+{
+  "source": "../../PORTFOLIO_EXPORT_full_system/homepage",
+  "alias": {
+    "@/components/": "./components/",
+    "@/lib/api": "@preview/fixtures",
+    "@/lib/": "./lib/"
+  }
+}

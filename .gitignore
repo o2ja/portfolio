@@ -1,3 +1,19 @@
 node_modules/
 dist/
 .env
+
+# notes / docs
+*.md
+
+# redesign kit
+portfolio_redesign_launch_kit/
+portfolio_redesign_launch_kit.zip
+
+# skills / tooling
+.claude/
+skills-lock.json
+graphify-out/
+
+# project exports: only homepage/ is needed by the preview builds
+PORTFOLIO_EXPORT_*/*
+!PORTFOLIO_EXPORT_*/homepage/

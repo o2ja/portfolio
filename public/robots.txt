@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+# isolated homepage builds of client projects, embedded by the portfolio
+Disallow: /previews/

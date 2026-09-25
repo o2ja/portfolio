@@ -1,0 +1,245 @@
+@import "tailwindcss";
+
+/* ===========================================================================
+   DESIGN TOKENS
+   White base, very light blue-gray surfaces, one sky-blue accent used
+   sparingly, dark charcoal-navy type. Shared verbatim by the public site and
+   the admin dashboard so the two read as one product.
+   ======================================================================== */
+
+@theme {
+  /* --- surfaces --------------------------------------------------------- */
+  --color-paper: #ffffff;
+  --color-canvas: #f6f8fb;
+  --color-sunken: #eef3f8;
+  --color-line: #e4eaf1;
+  --color-line-strong: #cbd8e4;
+
+  /* --- ink ---------------------------------------------------------------
+     Every value below clears WCAG AA (4.5:1) against the lightest surface
+     it is used on, verified in-browser rather than assumed. */
+  --color-ink: #0e151d;
+  --color-ink-muted: #4a5a6b;
+  --color-ink-subtle: #64707c;
+
+  /* --- accent: sky blue, used for action and emphasis, never as wallpaper */
+  --color-sky: #3d93d6;
+  --color-sky-deep: #26699f;
+  --color-sky-tint: #e9f2fa;
+
+  /* --- status: desaturated to sit beside the blue without shouting.
+     Each clears 4.5:1 on both its own tint and on paper. --------------- */
+  --color-positive: #2e7a5b;
+  --color-positive-tint: #e7f3ed;
+  --color-caution: #936617;
+  --color-caution-tint: #fbf1de;
+  --color-critical: #b0453c;
+  --color-critical-tint: #fbeceb;
+
+  /* --- type ------------------------------------------------------------- */
+  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  /* --- radii: restrained. Nothing here is a pill unless it is a badge. --- */
+  --radius-xs: 3px;
+  --radius-sm: 5px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* --- elevation: hairlines do most of the work; shadows are a whisper --- */
+  --shadow-hairline: 0 0 0 1px var(--color-line);
+  --shadow-card: 0 1px 2px rgb(14 21 29 / 0.04);
+  --shadow-raised: 0 12px 32px -16px rgb(14 21 29 / 0.24);
+  --shadow-overlay: 0 24px 60px -24px rgb(14 21 29 / 0.3);
+
+  /* --- motion ----------------------------------------------------------- */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* ===========================================================================
+   BASE
+   ======================================================================== */
+
+@layer base {
+  * {
+    border-color: var(--color-line);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-feature-settings: "cv05" 1, "ss01" 1;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Display type is set tight and optically sized; body stays comfortable. */
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* One visible focus treatment everywhere, including the dashboard. */
+  :focus-visible {
+    outline: 2px solid var(--color-sky);
+    outline-offset: 2px;
+    border-radius: var(--radius-xs);
+  }
+
+  /* Only remove the ring for pointer users who did not tab here. */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  ::selection {
+    background-color: var(--color-sky-tint);
+    color: var(--color-ink);
+  }
+
+  /* Tabular figures for anything that is money or a count. */
+  .tnum {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+  }
+}
+
+/* ===========================================================================
+   MOTION
+   Every animation below is disabled wholesale under prefers-reduced-motion,
+   and reveals must never leave content invisible if JS does not run.
+   ======================================================================== */
+
+@layer utilities {
+  /* Scroll-reveal: starts hidden ONLY once JS has marked the element. */
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity 0.6s var(--ease-out-soft),
+      transform 0.6s var(--ease-out-soft);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+
+  [data-reveal="shown"] {
+    opacity: 1;
+    transform: none;
+  }
+
+  @keyframes rise-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slide-in-right {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: none;
+    }
+  }
+
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  .animate-rise-in {
+    animation: rise-in 0.7s var(--ease-out-soft) both;
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.35s var(--ease-out-soft) both;
+  }
+
+  .animate-slide-in-right {
+    animation: slide-in-right 0.32s var(--ease-out-soft) both;
+  }
+
+  /* Skeletons: a single sweep, not a pulsing block. */
+  .skeleton {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--color-sunken);
+  }
+
+  .skeleton::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background-image: linear-gradient(
+      90deg,
+      transparent,
+      rgb(255 255 255 / 0.65),
+      transparent
+    );
+    animation: shimmer 1.6s infinite;
+  }
+
+  /* The dotted leader between a dish name and its price -- a printed-menu
+     idiom, and the reason the product rows do not read as generic cards. */
+  .leader {
+    flex: 1;
+    align-self: end;
+    margin-bottom: 0.35em;
+    border-bottom: 1px dotted var(--color-line-strong);
+    min-width: 1.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Never hide content from someone who opted out of motion. */
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .skeleton::after {
+    display: none;
+  }
+}

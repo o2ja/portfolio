@@ -1,0 +1,9 @@
+{
+  "source": "../../PORTFOLIO_EXPORT_Coach/homepage",
+  "alias": {
+    "@/components/site/": "./",
+    "@/components/ui/": "./",
+    "@/lib/api": "@preview/fixtures",
+    "@/lib/": "./"
+  }
+}

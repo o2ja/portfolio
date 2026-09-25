@@ -1,160 +1,151 @@
-import { motion } from 'framer-motion';
-import { useMotionConfig } from '../hooks/useReducedMotion';
+import { useLayoutEffect, useRef } from 'react';
+import {
+  motion,
+  useAnimationFrame,
+  useInView,
+  useMotionValue,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from 'framer-motion';
+import { ArrowDownRight } from 'lucide-react';
+import BlurText from '../components/BlurText';
+import { projects } from '../data/projects';
+import { ease } from '../lib/motion';
 
-const HERO_STACK_TAGS = [
-  'Full Stack',
-  'AI Engineer',
-  'React',
-  'Python',
-  'FastAPI',
-  'RAG',
-  'Cloud',
-];
+const PERIOD_MS = 64000; // one lap of the name
+const TILT = (-5 * Math.PI) / 180;
 
-const EASE_OUT = [0.23, 1, 0.32, 1];
+/**
+ * Signature moment: the three Selected Work projects orbit the name, passing in
+ * front of the letters on the near side of the ellipse and behind them on the
+ * far side. Each body is a real control that turns the Work orbit to its project.
+ */
+export default function Hero({ onShowProject }) {
+  const ref = useRef(null);
+  const reduce = useReducedMotion();
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
+  const lift = useTransform(scrollYProgress, [0, 1], [0, -80]);
+  const fade = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
-const nameWords = ['Omar', 'Al-Ajarmeh'];
+  return (
+    <section ref={ref} className="hero" aria-labelledby="hero-title">
+      <motion.div className="shell hero__inner" style={reduce ? undefined : { y: lift, opacity: fade }}>
+        <motion.p
+          className="hero__status"
+          initial={reduce ? false : { opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease }}
+        >
+          Available for full-time roles and freelance work
+        </motion.p>
+        <div className="hero__name">
+          <OrbitField onShowProject={onShowProject} />
+          <BlurText as="h1" text="Omar Al-Ajarmeh" className="hero__title" delay={140} direction="bottom" />
+        </div>
+        <motion.p
+          className="hero__sub"
+          initial={reduce ? false : { opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.55, ease }}
+        >
+          Full-stack developer and AI engineer in Amman. I build the database, the API and the interface.
+        </motion.p>
+        <motion.div
+          className="hero__ctas"
+          initial={reduce ? false : { opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.7, ease }}
+        >
+          <a href="#work" className="btn btn--solid">
+            See the work
+            <span className="btn__icon" aria-hidden="true">
+              <ArrowDownRight size={18} strokeWidth={1.75} />
+            </span>
+          </a>
+          <a href="#contact" className="text-link">
+            Contact
+          </a>
+        </motion.div>
+      </motion.div>
+    </section>
+  );
+}
 
-export default function Hero() {
-  const { transition } = useMotionConfig();
+function OrbitField({ onShowProject }) {
+  const box = useRef(null);
+  const reduce = useReducedMotion();
+  const inView = useInView(box);
+  const hovering = useRef(false);
+  const time = useMotionValue(0);
+  const size = useMotionValue([0, 0]);
 
-  const containerVariants = {
-    hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: 0.05,
-      },
-    },
-  };
+  useLayoutEffect(() => {
+    const el = box.current;
+    const measure = () => size.set([el.clientWidth, el.clientHeight]);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [size]);
 
-  const wordVariants = {
-    hidden: { opacity: 0, y: 32 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6, ease: EASE_OUT },
-    },
-  };
-
-  const fadeUp = (delay = 0) => ({
-    initial: { opacity: 0, y: 24 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.7, delay, ease: EASE_OUT },
+  // the clock only advances while the hero is visible, motion is allowed and nobody is aiming at a body
+  useAnimationFrame((_, delta) => {
+    if (!reduce && inView && !hovering.current) time.set(time.get() + Math.min(delta, 64));
   });
 
   return (
-    <section className="hero" id="hero" aria-label="Introduction">
-      <div className="container">
-        <div className="hero__grid">
+    <div
+      ref={box}
+      className="orbit-field"
+      onPointerOver={() => (hovering.current = true)}
+      onPointerOut={() => (hovering.current = false)}
+      onFocus={() => (hovering.current = true)}
+      onBlur={() => (hovering.current = false)}
+    >
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <ellipse cx="50" cy="50" rx="49.5" ry="49.5" transform="rotate(-5 50 50)" />
+        <ellipse cx="50" cy="50" rx="44" ry="40" transform="rotate(-5 50 50)" />
+      </svg>
+      {projects.map((project, i) => (
+        <Body
+          key={project.id}
+          project={project}
+          phase={(i / projects.length) * Math.PI * 2 + 0.6}
+          time={time}
+          size={size}
+          onClick={() => onShowProject(project.id)}
+        />
+      ))}
+    </div>
+  );
+}
 
-          {/* LEFT: Text content */}
-          <div>
-            <motion.p
-              className="hero__eyebrow"
-              {...fadeUp(0.1)}
-            >
-              / Full Stack Developer &amp; AI Engineer
-            </motion.p>
+function Body({ project, phase, time, size, onClick }) {
+  const angle = useTransform(time, (t) => phase + (t / PERIOD_MS) * Math.PI * 2);
+  const point = useTransform([angle, size], ([a, [w, h]]) => {
+    const ex = Math.cos(a) * (w / 2) * 0.99;
+    const ey = Math.sin(a) * (h / 2) * 0.99;
+    return [w / 2 + ex * Math.cos(TILT) - ey * Math.sin(TILT), h / 2 + ex * Math.sin(TILT) + ey * Math.cos(TILT)];
+  });
+  const x = useTransform(point, (p) => p[0]);
+  const y = useTransform(point, (p) => p[1]);
+  const near = useTransform(angle, (a) => Math.sin(a)); // 1 = closest to the viewer
+  const scale = useTransform(near, (s) => 0.8 + (s + 1) * 0.14);
+  const zIndex = useTransform(near, (s) => (s > 0 ? 2 : 0));
 
-            <motion.h1
-              className="hero__name"
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-              aria-label="Omar Al-Ajarmeh"
-            >
-              {nameWords.map((word, i) => (
-                <motion.span
-                  key={i}
-                  variants={wordVariants}
-                  style={{ display: 'block' }}
-                >
-                  {word}
-                </motion.span>
-              ))}
-            </motion.h1>
-
-            <motion.p
-              className="hero__tagline"
-              {...fadeUp(0.55)}
-            >
-              Building elegant systems, end to end.
-            </motion.p>
-
-            <motion.div {...fadeUp(0.65)}>
-              <div className="hero__status" role="status" aria-label="Availability status">
-                <span className="hero__status-dot" aria-hidden="true" />
-                Available for opportunities
-              </div>
-            </motion.div>
-
-            <motion.div
-              className="hero__ctas"
-              {...fadeUp(0.75)}
-            >
-              <a
-                href="#projects"
-                className="btn-primary"
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-              >
-                View My Work
-              </a>
-              <a
-                href="/cv.pdf"
-                className="btn-secondary"
-                aria-label="Download CV (PDF)"
-                download
-              >
-                Download CV
-                <span className="arrow" aria-hidden="true">→</span>
-              </a>
-            </motion.div>
-
-            <motion.div
-              className="hero__scroll"
-              {...fadeUp(1.0)}
-              aria-hidden="true"
-            >
-              <span className="hero__scroll-label">scroll</span>
-              <div className="hero__scroll-arrow" />
-            </motion.div>
-          </div>
-
-          {/* RIGHT: Editorial stack rail */}
-          <div className="hero__visual" aria-hidden="true">
-            <div className="hero__stack-rail">
-              <motion.div
-                className="hero__rail-line"
-                initial={{ scaleY: 0 }}
-                animate={{ scaleY: 1 }}
-                transition={{ duration: 1.0, delay: 0.3, ease: EASE_OUT }}
-                style={{ transformOrigin: 'top' }}
-              />
-              <div className="hero__rail-labels">
-                {HERO_STACK_TAGS.map((tag, i) => (
-                  <motion.span
-                    key={tag}
-                    className="hero__rail-tag"
-                    initial={{ opacity: 0, x: -12 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{
-                      duration: 0.5,
-                      delay: 0.5 + i * 0.07,
-                      ease: EASE_OUT,
-                    }}
-                  >
-                    {tag}
-                  </motion.span>
-                ))}
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
+  return (
+    <motion.button
+      type="button"
+      className="orbit-body"
+      style={{ x, y, scale, zIndex, '--c': project.theme.accent }}
+      onClick={onClick}
+      aria-label={`Show ${project.name} in Selected work`}
+    >
+      <span className="orbit-body__dot" aria-hidden="true" />
+      <span className="orbit-body__label" aria-hidden="true">
+        {project.name}
+      </span>
+    </motion.button>
   );
 }

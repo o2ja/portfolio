@@ -1,0 +1,8 @@
+{
+  "source": "../../PORTFOLIO_EXPORT_obaidi_time/homepage",
+  "alias": {
+    "@/components/": "./",
+    "@/lib/api": "@preview/fixtures",
+    "@/lib/": "./"
+  }
+}

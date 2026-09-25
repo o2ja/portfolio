@@ -1,201 +1,123 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import SectionLabel from '../components/SectionLabel';
-import { useMotionConfig } from '../hooks/useReducedMotion';
+import { ArrowUpRight, Check, Copy } from 'lucide-react';
+import { reveal } from '../lib/motion';
 
-const EASE_OUT = [0.23, 1, 0.32, 1];
+const EMAIL = 'omar1152003@gmail.com';
 
+const LINKS = [
+  { label: 'LinkedIn', value: 'linkedin.com/in/omar-ajarmeh', href: 'https://linkedin.com/in/omar-ajarmeh' },
+  { label: 'GitHub', value: 'github.com/o2ja', href: 'https://github.com/o2ja' },
+  { label: 'Phone', value: '+962 795 232 859', href: 'tel:+962795232859' },
+];
+
+/**
+ * There is no form backend, so the form is honest about it: it composes an
+ * email in the visitor's own mail app instead of pretending to send.
+ */
 export default function Contact() {
-  const { transition } = useMotionConfig();
-  const [formState, setFormState] = useState({ name: '', email: '', message: '' });
-  const [submitted, setSubmitted] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [errors, setErrors] = useState({});
 
-  const handleChange = (e) => {
-    setFormState((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(EMAIL);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2200);
+    } catch {
+      window.location.href = `mailto:${EMAIL}`;
+    }
   };
 
-  const handleSubmit = (e) => {
+  const submit = (e) => {
     e.preventDefault();
-    // In production, connect to your preferred form backend
-    setSubmitted(true);
+    const data = Object.fromEntries(new FormData(e.currentTarget));
+    const next = {};
+    if (!data.name.trim()) next.name = 'Add your name.';
+    if (!/^\S+@\S+\.\S+$/.test(data.email)) next.email = 'Add an email address I can reply to.';
+    if (!data.message.trim()) next.message = 'Tell me a little about the project or role.';
+    setErrors(next);
+    if (Object.keys(next).length) return;
+    const subject = encodeURIComponent(`Hello from ${data.name.trim()}`);
+    const body = encodeURIComponent(`${data.message.trim()}\n\n${data.name.trim()}\n${data.email.trim()}`);
+    window.location.href = `mailto:${EMAIL}?subject=${subject}&body=${body}`;
   };
+
+  const field = (name, label, props) => (
+    <div className="field-group">
+      <label htmlFor={`c-${name}`}>{label}</label>
+      {props.rows ? (
+        <textarea id={`c-${name}`} name={name} aria-invalid={!!errors[name]} aria-describedby={`c-${name}-err`} {...props} />
+      ) : (
+        <input id={`c-${name}`} name={name} aria-invalid={!!errors[name]} aria-describedby={`c-${name}-err`} {...props} />
+      )}
+      <p id={`c-${name}-err`} className="field-group__error" aria-live="polite">
+        {errors[name]}
+      </p>
+    </div>
+  );
 
   return (
-    <section className="section section--surface-2" id="contact" aria-label="Contact Omar">
-      <div className="container">
-        <SectionLabel label="/ 06 — contact" />
-
-        <motion.h2
-          className="contact__heading text-display"
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={transition(0.8)}
-        >
-          Let's build something.
-        </motion.h2>
-
-        <motion.p
-          className="contact__subtext"
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-40px' }}
-          transition={transition(0.7, 0.1)}
-        >
-          Open to full-time roles, freelance projects, and interesting collaborations.
-        </motion.p>
-
-        <motion.p
-          className="contact__location"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={transition(0.6, 0.2)}
-        >
-          Based in Amman, Jordan · Available remotely
-        </motion.p>
-
-        <div className="contact__rule" aria-hidden="true" />
-
-        <motion.div
-          className="contact__grid"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-40px' }}
-          transition={transition(0.7, 0.15)}
-        >
-          {/* Links column */}
-          <div className="contact__links-col">
-            <p className="contact__link-label">Reach out</p>
-
-            <a
-              href="mailto:omar1152003@gmail.com"
-              className="contact__link link-underline"
-              aria-label="Send Omar an email"
-            >
-              omar1152003@gmail.com
+    <section id="contact" className="contact" aria-labelledby="contact-title">
+      <div className="shell">
+        <motion.div {...reveal}>
+          <h2 id="contact-title" className="h2">
+            Let&apos;s build something.
+          </h2>
+          <p className="lede">
+            Open to full-time roles, freelance projects and interesting collaborations, remotely or in Amman.
+          </p>
+          <div className="contact__email">
+            <a href={`mailto:${EMAIL}`} className="text-link">
+              {EMAIL}
             </a>
-
-            <a
-              href="https://linkedin.com/in/omar-ajarmeh"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="contact__link link-underline"
-              aria-label="Omar's LinkedIn profile"
-            >
-              linkedin.com/in/omar-ajarmeh
-            </a>
-
-            <a
-              href="https://github.com/o2ja"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="contact__link link-underline"
-              aria-label="Omar's GitHub profile"
-            >
-              github.com/o2ja
-            </a>
-
-            <a
-              href="tel:+962795232859"
-              className="contact__link link-underline"
-              aria-label="Call Omar"
-              style={{ marginTop: 'var(--space-xs)' }}
-            >
-              +962 795 232 859
-            </a>
-          </div>
-
-          {/* Form */}
-          <div>
-            {submitted ? (
-              <motion.div
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, ease: EASE_OUT }}
-                style={{ paddingTop: 'var(--space-l)' }}
-              >
-                <p
-                  style={{
-                    fontFamily: 'var(--font-display)',
-                    fontSize: 'var(--text-xl)',
-                    color: 'var(--color-text)',
-                    marginBottom: 'var(--space-s)',
-                  }}
-                >
-                  Message received.
-                </p>
-                <p
-                  style={{
-                    fontFamily: 'var(--font-body)',
-                    fontSize: 'var(--text-base)',
-                    fontWeight: 300,
-                    color: 'var(--color-muted)',
-                  }}
-                >
-                  I'll be in touch soon.
-                </p>
-              </motion.div>
-            ) : (
-              <form
-                className="contact__form"
-                onSubmit={handleSubmit}
-                aria-label="Contact form"
-                noValidate
-              >
-                <div className="form-group">
-                  <label htmlFor="contact-name">Name</label>
-                  <input
-                    id="contact-name"
-                    type="text"
-                    name="name"
-                    value={formState.name}
-                    onChange={handleChange}
-                    placeholder="Your name"
-                    required
-                    autoComplete="name"
-                    aria-required="true"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="contact-email">Email</label>
-                  <input
-                    id="contact-email"
-                    type="email"
-                    name="email"
-                    value={formState.email}
-                    onChange={handleChange}
-                    placeholder="your@email.com"
-                    required
-                    autoComplete="email"
-                    aria-required="true"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="contact-message">Message</label>
-                  <textarea
-                    id="contact-message"
-                    name="message"
-                    value={formState.message}
-                    onChange={handleChange}
-                    placeholder="Tell me about your project or opportunity…"
-                    required
-                    aria-required="true"
-                    rows={5}
-                  />
-                </div>
-
-                <div className="contact__form-submit">
-                  <button type="submit" className="btn-primary">
-                    Send Message
-                  </button>
-                </div>
-              </form>
-            )}
+            <button type="button" className="btn btn--ghost" onClick={copy} aria-live="polite">
+              {copied ? 'Copied' : 'Copy email'}
+              <span className="btn__icon" aria-hidden="true">
+                {copied ? <Check size={15} strokeWidth={1.75} /> : <Copy size={15} strokeWidth={1.75} />}
+              </span>
+            </button>
           </div>
         </motion.div>
+
+        <div className="contact__grid">
+          <ul className="contact__links">
+            {LINKS.map((l) => (
+              <li key={l.label}>
+                <span>{l.label}</span>
+                <a
+                  href={l.href}
+                  className="text-link"
+                  {...(l.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                >
+                  {l.value}
+                </a>
+              </li>
+            ))}
+          </ul>
+
+          <form className="form" onSubmit={submit} noValidate aria-label="Write an email">
+            <div className="form__row">
+              {field('name', 'Name', { type: 'text', autoComplete: 'name' })}
+              {field('email', 'Email', { type: 'email', autoComplete: 'email' })}
+            </div>
+            {field('message', 'Message', { rows: 5 })}
+            <div className="form__foot">
+              <button type="submit" className="btn btn--solid">
+                Write the email
+                <span className="btn__icon" aria-hidden="true">
+                  <ArrowUpRight size={16} strokeWidth={1.75} />
+                </span>
+              </button>
+              <p className="form__hint">This opens your email app with the message filled in. Nothing is sent from this page.</p>
+            </div>
+          </form>
+        </div>
+
+        <footer className="footer">
+          <p>Designed and built by Omar Al-Ajarmeh, {new Date().getFullYear()}.</p>
+          <p>The project previews are compiled from each project&apos;s original homepage source.</p>
+        </footer>
       </div>
     </section>
   );
