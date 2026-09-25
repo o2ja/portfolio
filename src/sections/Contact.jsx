@@ -6,7 +6,7 @@ import { reveal } from '../lib/motion';
 const EMAIL = 'omar1152003@gmail.com';
 
 const LINKS = [
-  { label: 'LinkedIn', value: 'linkedin.com/in/omar-ajarmeh', href: 'https://linkedin.com/in/omar-ajarmeh' },
+  { label: 'LinkedIn', value: 'linkedin.com/in/omar-ajarmeh-7b271b411', href: 'https://linkedin.com/in/omar-ajarmeh-7b271b411' },
   { label: 'GitHub', value: 'github.com/o2ja', href: 'https://github.com/o2ja' },
   { label: 'Phone', value: '+962 795 232 859', href: 'tel:+962795232859' },
 ];
