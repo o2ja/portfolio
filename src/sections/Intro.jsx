@@ -3,7 +3,7 @@ import { reveal } from '../lib/motion';
 
 const FACTS = [
   ['Based in', 'Amman, Jordan'],
-  ['Shipped', '20+ web applications'],
+  ['Shipped', '20+ web apps, 12 clients'],
   ['Studied', 'B.Sc. Computer Science'],
   ['Speaks', 'Arabic, English'],
 ];

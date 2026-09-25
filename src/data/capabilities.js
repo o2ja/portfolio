@@ -64,4 +64,4 @@ export const capabilities = [
 ];
 
 /** Delivery tooling from the original stack list; shown once, without evidence claims. */
-export const delivery = ['AWS', 'Docker', 'CI/CD', 'Git', 'Python', 'JavaScript', 'HTML', 'CSS'];
+export const delivery = ['AWS', 'Docker', 'CI/CD', 'Git', 'Python', 'JavaScript', 'HTML', 'CSS', 'Claude Code', 'Codex', 'Agile/Scrum'];

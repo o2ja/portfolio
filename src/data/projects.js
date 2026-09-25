@@ -159,10 +159,10 @@ export const projects = [
 
 /** Earlier work, shown as a compact text index below the orbit. */
 export const archive = [
-  { id: 'adibot', title: 'adiBot', note: 'AI shopping assistant with semantic search and a conversational agent', stack: ['Next.js 14', 'FastAPI', 'FAISS', 'GPT-4o'] },
-  { id: 'caffaine', title: 'CaffAIne', note: 'Graduation project: dual AI assistant for owners and customers', stack: ['React', 'FastAPI'] },
-  { id: 'car-dealership', title: 'Car Dealership SaaS', note: 'Multi-tenant inventory, leads and admin dashboards', stack: ['React', 'Node.js', 'MySQL'] },
-  { id: 'ecommerce', title: 'E-Commerce Platform', note: 'Cart, checkout, payments and an admin panel', stack: ['Next.js', 'NestJS', 'MySQL'] },
-  { id: 'coffee-shop', title: 'Coffee Shop Website', note: 'Menu, online ordering and location for a local business', stack: ['React', 'Express'] },
-  { id: 'artist-portfolio', title: 'Artist Portfolio', note: 'Gallery and animation showcase for a visual artist', stack: ['React', 'Vite', 'Framer Motion'] },
+  { id: 'caffaine', title: 'CaffAIne', note: 'Graduation project: cafe ordering and back office with two AI assistants, one for guests and one for the owner. Stock deducts itself from recipes on every order', stack: ['React', 'Node.js', 'Express', 'MySQL', 'JWT', 'OpenAI API'] },
+  { id: 'adibot', title: 'Scout', note: 'Shopping assistant that understands "something warm for a rainy trip" and finds it, using semantic search and a conversational agent', stack: ['Next.js 14', 'FastAPI', 'FAISS', 'GPT-4o'] },
+  { id: 'car-dealership', title: 'Forecourt', note: 'Multi-tenant dealership OS: every lot gets its own inventory, lead pipeline and admin dashboard', stack: ['React', 'Node.js', 'MySQL'] },
+  { id: 'ecommerce', title: 'Parcel', note: 'Storefront engine with cart, checkout, payments and an admin panel that runs the whole shop', stack: ['Next.js', 'NestJS', 'MySQL'] },
+  { id: 'coffee-shop', title: 'Roastline', note: 'Menu, online ordering and directions for a neighbourhood coffee shop, built to get people from phone to counter', stack: ['React', 'Express'] },
+  { id: 'artist-portfolio', title: 'Negative Space', note: 'Gallery for a visual artist where motion frames the work instead of competing with it', stack: ['React', 'Vite', 'Framer Motion'] },
 ];
