@@ -41,7 +41,7 @@ export default function Hero({ onShowProject }) {
         </motion.p>
         <div className="hero__name">
           <OrbitField onShowProject={onShowProject} />
-          <BlurText as="h1" text="Omar Al-Ajarmeh" className="hero__title" delay={140} direction="bottom" />
+          <BlurText as="h1" text="Omar AlAjarmeh" className="hero__title" delay={140} direction="bottom" />
         </div>
         <motion.p
           className="hero__sub"
