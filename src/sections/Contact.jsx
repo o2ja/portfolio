@@ -115,7 +115,7 @@ export default function Contact() {
         </div>
 
         <footer className="footer">
-          <p>Designed and built by Omar Al-Ajarmeh, {new Date().getFullYear()}.</p>
+          <p>Designed and built by Omar Amjad, {new Date().getFullYear()}.</p>
           <p>The project previews are compiled from each project&apos;s original homepage source.</p>
         </footer>
       </div>
