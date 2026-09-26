@@ -10,7 +10,7 @@ export const capabilities = [
     body: 'Editorial layouts, variable type and motion that explains rather than decorates.',
     tools: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS', 'GSAP', 'Framer Motion'],
     evidence: [
-      { project: 'obaidi-time', text: 'Real-time SVG dial with a pointer-tracking sunburst' },
+      { project: 'obaidi-time', text: 'Real time SVG dial with a pointer tracking sunburst' },
       { project: 'coach', text: 'Line art that draws itself, with zero animation libraries' },
     ],
   },
@@ -21,7 +21,7 @@ export const capabilities = [
     tools: ['FastAPI', 'Django', 'Node.js', 'Express', 'NestJS', 'REST', 'GraphQL'],
     evidence: [
       { project: 'bagel-house', text: 'Order state machine with 409 on illegal transitions' },
-      { project: 'coach', text: 'Lead workflow from NEW to COMPLETED, validated server-side' },
+      { project: 'coach', text: 'Lead workflow from NEW to COMPLETED, validated server side' },
     ],
   },
   {
@@ -30,7 +30,7 @@ export const capabilities = [
     body: 'Schemas and migrations that make the wrong thing hard to store.',
     tools: ['PostgreSQL', 'MySQL', 'SQLAlchemy 2', 'Alembic', 'Query optimisation'],
     evidence: [
-      { project: 'bagel-house', text: 'NUMERIC money end to end, recipe-based stock ledger' },
+      { project: 'bagel-house', text: 'NUMERIC money end to end, recipe based stock ledger' },
     ],
   },
   {
@@ -58,7 +58,7 @@ export const capabilities = [
     body: 'LLM features scoped to typed tools, audited, and useful to the business.',
     tools: ['LLM integration', 'RAG pipelines', 'FAISS vector search', 'Agentic workflows'],
     evidence: [
-      { project: 'bagel-house', text: 'Six permission-checked analytics tools, fully audit-logged' },
+      { project: 'bagel-house', text: 'Six permission checked analytics tools, fully audit logged' },
     ],
   },
 ];

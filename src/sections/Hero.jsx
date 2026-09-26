@@ -37,7 +37,7 @@ export default function Hero({ onShowProject }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease }}
         >
-          Available for full-time roles and freelance work
+          Available for full time roles and freelance work
         </motion.p>
         <div className="hero__name">
           <OrbitField onShowProject={onShowProject} />
@@ -49,7 +49,7 @@ export default function Hero({ onShowProject }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.55, ease }}
         >
-          Full-stack developer and AI engineer in Amman. I build the database, the API and the interface.
+          Full stack developer and AI engineer in Amman. I build the database, the API and the interface.
         </motion.p>
         <motion.div
           className="hero__ctas"

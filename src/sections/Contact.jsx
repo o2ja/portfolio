@@ -65,7 +65,7 @@ export default function Contact() {
             Let&apos;s build something.
           </h2>
           <p className="lede">
-            Open to full-time roles, freelance projects and interesting collaborations, remotely or in Amman.
+            Open to full time roles, freelance projects and interesting collaborations, remotely or in Amman.
           </p>
           <div className="contact__email">
             <a href={`mailto:${EMAIL}`} className="text-link">

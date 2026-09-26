@@ -5,7 +5,7 @@ export const certs = [
     date: 'Oct 2024',
   },
   {
-    title: 'AWS Certified Developer - Associate',
+    title: 'AWS Certified Developer Associate',
     issuer: 'Amazon Web Services',
     date: 'May 2025',
   },

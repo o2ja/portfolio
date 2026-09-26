@@ -12,11 +12,11 @@ export default function Background() {
             About
           </h2>
           <p className="bg__bio">
-            I&apos;m a full-stack web developer and AI engineer with a Computer Science background. I ship production
+            I&apos;m a full stack web developer and AI engineer with a Computer Science background. I ship production
             web and AI applications end to end: database design, REST and GraphQL APIs, responsive React interfaces,
             and RAG pipelines and LLM integrations for real clients.
           </p>
-          <p className="bg__bio">B.Sc. Computer Science, Al-Balqa Applied University, Amman. Class of 2026.</p>
+          <p className="bg__bio">B.Sc. Computer Science, Al Balqa Applied University, Amman. Class of 2026.</p>
         </motion.div>
 
         <div>
