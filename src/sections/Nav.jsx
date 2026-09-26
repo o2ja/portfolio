@@ -10,7 +10,7 @@ export default function Nav() {
       <div className="shell">
         <nav className="nav__bar" aria-label="Primary">
           <a href="#main" className="nav__mark">
-            Omar Al-Ajarmeh
+            Omar Amjad
           </a>
           <ul className="nav__links">
             {LINKS.map((link) => (
