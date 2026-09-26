@@ -373,13 +373,16 @@ img {
 .hero__name {
   position: relative;
   margin-top: 3rem;
+  width: fit-content;
+  max-width: 100%;
+  margin-inline: auto;
 }
 .hero__name .hero__title {
   margin-top: 0;
 }
 .orbit-field {
   position: absolute;
-  inset: -24% -6% -26% -4%;
+  inset: -32% -12% -32% -12%;
   pointer-events: none;
 }
 .orbit-field svg {
